@@ -4,6 +4,11 @@ import pickle
 
 from keras.preprocessing import sequence
 from keras.utils import np_utils
+from flask import Flask
+from flask import request
+
+
+app = Flask(__name__)
 
 import model
 import partyprogram_loader
@@ -15,6 +20,18 @@ FILENAME_SAVED_DATA = 'data.p'
 PARTIJPATH = 'partijprogrammas'
 EMBEDDING_VECTOR_LENGTH = 32
 MAX_REVIEW_LENGTH = 20
+
+kerasmodel = None
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+@app.route('/predict')
+def predict_party():
+    sentence = request.args.get('sentence')
+    print("Got sentence")
+    return "Thank you"
 
 if __name__ == "__main__":
     if os.path.exists(FILENAME_SAVED_DATA):
@@ -54,3 +71,5 @@ if __name__ == "__main__":
     scores = kerasmodel.evaluate(X_test, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
     print("commit test")
+
+    app.run(host="0.0.0.0",port=5000)
