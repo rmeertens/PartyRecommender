@@ -44,6 +44,7 @@ def predict_party():
     print(something)
     predicted = kerasmodel.predict(something)
     print("Got sentence: " + sentence)
+    print(predicted)
     return "Thank you"
 
 if __name__ == "__main__":
