@@ -40,9 +40,11 @@ def predict_party():
         print(id_of_word_getter.get_id_of_word(word))
         ids.append(id_of_word_getter.get_id_of_word(word))
         print(id_of_word_getter.get_word_of_id(id_of_word_getter.get_id_of_word(word)))
+    ids = [ids]
     something = sequence.pad_sequences(ids, maxlen=MAX_REVIEW_LENGTH)
     print(something)
     predicted = kerasmodel.predict(something)
+    print(predicted)
     print("Got sentence: " + sentence)
     return "Thank you"
 
