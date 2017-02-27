@@ -31,7 +31,7 @@ if __name__ == "__main__":
     if os.path.exists(FILENAME_SAVED_MODEL):
         kerasmodel = model.load_model(FILENAME_SAVED_MODEL)
     else:
-        kerasmodel = model.get_model(word_count,EMBEDDING_VECTOR_LENGTH,)
+        kerasmodel = model.get_model(word_count,EMBEDDING_VECTOR_LENGTH,MAX_REVIEW_LENGTH,party_count)
         kerasmodel.save(FILENAME_SAVED_MODEL)
 
 
