@@ -22,6 +22,7 @@ EMBEDDING_VECTOR_LENGTH = 32
 MAX_REVIEW_LENGTH = 20
 
 kerasmodel = None
+id_of_word_getter = None
 
 @app.route('/')
 def hello_world():
@@ -31,6 +32,11 @@ def hello_world():
 def predict_party():
     sentence = request.headers.get('predicttext')
     print(request.headers)
+    words = sentence.split()
+    print("The ids:")
+    for word in words:
+        print(id_of_word_getter.get_id_of_word(word))
+        print(id_of_word_getter.get_word_of_id(id_of_word_getter.get_id_of_word(word)))
 
     print("Got sentence: " + sentence)
     return "Thank you"
@@ -40,6 +46,7 @@ if __name__ == "__main__":
         loaded = pickle.load(open(FILENAME_SAVED_DATA, "rb"))
         X_test = loaded['X_test']
         y_test = loaded['y_test']
+        id_of_word_getter = loaded["idofwordgetter"]
     else:
 
         parties_and_sentences= partyprogram_loader.get_parties_and_sentences(PARTIJPATH)
@@ -58,6 +65,7 @@ if __name__ == "__main__":
         tosave = dict()
         tosave['y_test'] = y_test
         tosave['X_test'] = X_test
+        tosave["idofwordgetter"] = id_of_word_getter
         pickle.dump(tosave, open(FILENAME_SAVED_DATA, "wb"))
 
     if os.path.exists(FILENAME_SAVED_MODEL):
