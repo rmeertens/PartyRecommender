@@ -29,8 +29,10 @@ def hello_world():
 
 @app.route('/predict')
 def predict_party():
-    sentence = request.args.get('sentence')
-    print("Got sentence")
+    sentence = request.headers.get('predicttext')
+    print(request.headers)
+
+    print("Got sentence: " + sentence)
     return "Thank you"
 
 if __name__ == "__main__":
