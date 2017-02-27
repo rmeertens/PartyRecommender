@@ -13,7 +13,7 @@ MAX_REVIEW_LENGTH = 20
 
 if __name__ == "__main__":
 
-    parties_and_sentences= partyprogram_loader.get_parties_and_sentences()
+    parties_and_sentences= partyprogram_loader.get_parties_and_sentences(PARTIJPATH)
     vocab_list = partyprogram_loader.vocab_from_sentences(parties_and_sentences)
     id_of_word_getter = partyprogram_loader.IdOfWordGetter(vocab_list)
     party_count = len(parties_and_sentences.keys())
