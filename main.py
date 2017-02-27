@@ -32,10 +32,11 @@ if __name__ == "__main__":
         kerasmodel = model.load_model(FILENAME_SAVED_MODEL)
     else:
         kerasmodel = model.get_model(word_count,EMBEDDING_VECTOR_LENGTH,MAX_REVIEW_LENGTH,party_count)
+        model.train_model(kerasmodel, X_train, y_train)
         kerasmodel.save(FILENAME_SAVED_MODEL)
 
 
     print("Done training and loading model")
     # Final evaluation of the model
-    scores = model.evaluate(X_test, y_test, verbose=0)
+    scores = kerasmodel.evaluate(X_test, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
