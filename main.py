@@ -40,3 +40,4 @@ if __name__ == "__main__":
     # Final evaluation of the model
     scores = kerasmodel.evaluate(X_test, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
+    print("commit test")
