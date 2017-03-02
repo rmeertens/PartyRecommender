@@ -87,7 +87,7 @@ def get_parties_and_sentences(partypath):
         sentences = []
 
         # remove all words with a number
-        text = text.replace("\n", " ")
+        text = text.decode('utf8').replace("\n", " ")
 
         text = re.sub(r'\w*\d\w*', '', text).strip()
 
@@ -97,7 +97,13 @@ def get_parties_and_sentences(partypath):
             tokens = basic_tokenizer(text)
             sentences_this_page = get_sentences_from_tokens(tokens)
             sentences.extend(sentences_this_page)
+        print(partijprogramma_name)
         part_sentences[partijprogramma_name] = sentences
+        with open(partijprogramma_name,'w') as f:
+          print('writing to' + partijprogramma_name)
+          for sentence in sentences:
+            
+            f.write("%s\n" % sentence)
     return part_sentences
 
 def vocab_from_sentences(parties_and_sentences):
