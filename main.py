@@ -18,7 +18,7 @@ import partyprogram_loader
 # GLOBALS YOU CAN SET AND PLAY WITH
 FILENAME_SAVED_MODEL = 'party_model.h5'
 FILENAME_SAVED_DATA = 'data.p'
-
+SAVED_TRAINDATA_DIR = 'traindata'
 PARTIJPATH = 'partijprogrammas'
 EMBEDDING_VECTOR_LENGTH = 32
 MAX_REVIEW_LENGTH = 20
@@ -75,8 +75,9 @@ def after_request(response):
   return response
 
 if __name__ == "__main__":
-    if os.path.exists(FILENAME_SAVED_DATA):
-        loaded = pickle.load(open(FILENAME_SAVED_DATA, "rb"))
+    path = os.path.join(SAVED_TRAINDATA_DIR,FILENAME_SAVED_DATA)
+    if os.path.exists(path):
+        loaded = pickle.load(open(path, "rb"))
         X_test = loaded['X_test']
         y_test = loaded['y_test']
         id_of_word_getter = loaded["idofwordgetter"]
@@ -102,14 +103,16 @@ if __name__ == "__main__":
         tosave['X_test'] = X_test
         tosave["idofwordgetter"] = id_of_word_getter
         tosave["partynames"] = party_names
-        pickle.dump(tosave, open(FILENAME_SAVED_DATA, "wb"))
+        path = os.path.join(SAVED_TRAINDATA_DIR,FILENAME_SAVED_DATA)
+        pickle.dump(tosave, open(path, "wb"))
 
-    if os.path.exists(FILENAME_SAVED_MODEL):
-        kerasmodel = model.load_model(FILENAME_SAVED_MODEL)
+    path = os.path.join(SAVED_TRAINDATA_DIR, FILENAME_SAVED_MODEL)
+    if os.path.exists(path):
+        kerasmodel = model.load_model(path)
     else:
         kerasmodel = model.get_model(word_count,EMBEDDING_VECTOR_LENGTH,MAX_REVIEW_LENGTH,party_count)
         model.train_model(kerasmodel, X_train, y_train)
-        kerasmodel.save(FILENAME_SAVED_MODEL)
+        kerasmodel.save(path)
 
 
     print("Done training and loading model")
