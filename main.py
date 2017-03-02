@@ -2,11 +2,13 @@
 import os
 import pickle
 
+
+import json
 from keras.preprocessing import sequence
 from keras.utils import np_utils
 from flask import Flask
 from flask import request
-
+import numpy as np
 
 app = Flask(__name__)
 
@@ -23,10 +25,11 @@ MAX_REVIEW_LENGTH = 20
 
 kerasmodel = None
 id_of_word_getter = None
+party_names = None
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'This is a test. Go to slash predict to see what is up, World!'
 
 @app.route('/predict')
 def predict_party():
@@ -44,10 +47,23 @@ def predict_party():
     something = sequence.pad_sequences(ids, maxlen=MAX_REVIEW_LENGTH)
     print(something)
     predicted = kerasmodel.predict(something)
-    print(predicted)
+    predicted = np.array(predicted[0])
     print("Got sentence: " + sentence)
     print(predicted)
-    return "Thank you"
+    best_three = predicted.argsort()[-3:][::-1]
+    print(best_three)    
+    best_parties = list()
+    for number in best_three:
+      best_parties.append((party_names[number].split('.')[0],int(100*predicted[number])))
+    return json.dumps(best_parties)
+
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
 
 if __name__ == "__main__":
     if os.path.exists(FILENAME_SAVED_DATA):
@@ -55,12 +71,14 @@ if __name__ == "__main__":
         X_test = loaded['X_test']
         y_test = loaded['y_test']
         id_of_word_getter = loaded["idofwordgetter"]
+        party_names = loaded["partynames"]
     else:
 
         parties_and_sentences= partyprogram_loader.get_parties_and_sentences(PARTIJPATH)
         vocab_list = partyprogram_loader.vocab_from_sentences(parties_and_sentences)
         id_of_word_getter = partyprogram_loader.IdOfWordGetter(vocab_list)
         party_count = len(parties_and_sentences.keys())
+        party_names = list(parties_and_sentences.keys())
         word_count = len(vocab_list)
 
         (X_train, y_train), (X_test, y_test) = partyprogram_loader.load_data(parties_and_sentences, id_of_word_getter)
@@ -74,6 +92,7 @@ if __name__ == "__main__":
         tosave['y_test'] = y_test
         tosave['X_test'] = X_test
         tosave["idofwordgetter"] = id_of_word_getter
+        tosave["partynames"] = party_names
         pickle.dump(tosave, open(FILENAME_SAVED_DATA, "wb"))
 
     if os.path.exists(FILENAME_SAVED_MODEL):

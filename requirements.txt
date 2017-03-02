@@ -2,3 +2,5 @@ PyPDF2
 flask
 keras
 requests
+h5py
+numpy
