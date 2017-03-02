@@ -48,23 +48,25 @@ def predict_party():
         words = []
 
     ids = []
-
+    sentence_understood = ""
     for word in words:
         ids.append(id_of_word_getter.get_id_of_word(word))
-        print(id_of_word_getter.get_word_of_id(id_of_word_getter.get_id_of_word(word)), end=' ')
+        sentence_understood += id_of_word_getter.get_word_of_id(id_of_word_getter.get_id_of_word(word)) + " "
     ids = [ids]
     something = sequence.pad_sequences(ids, maxlen=MAX_REVIEW_LENGTH)
-    print(something)
     predicted = kerasmodel.predict(something)
     predicted = np.array(predicted[0])
-    print("Got sentence: " + sentence)
-    print(predicted)
+
+
     best_three = predicted.argsort()[-3:][::-1]
-    print(best_three)    
+
     best_parties = list()
     for number in best_three:
       best_parties.append((party_names[number].split('.')[0],int(100*predicted[number])))
-    return json.dumps(best_parties)
+    toreturn = dict()
+    toreturn["understood"] = sentence_understood
+    toreturn["best_parties"] = best_parties
+    return json.dumps(toreturn)
 
 
 @app.after_request
