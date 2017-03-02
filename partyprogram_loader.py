@@ -8,7 +8,7 @@ _GO = "_GO"
 _EOS = "_EOS"
 _UNK = "_UNK"
 _START_VOCAB = [_PAD, _GO, _EOS, _UNK]
-
+parties = ["PVDA","SGP","Ondernemerspartij","Libertarische Partij","Lokaal in de Kamer","Groenlinks","PVV","VoorNederland","Piratenpartij","DENK","De Burger Beweging","D66","CDA","50PLUS","VVD","Partij voor de Dieren","MenS en Spirit/Basisinkomen Partij/V","ChristenUnie","SP","NIEUWE WEGEN","JEZUS LEEFT","Vrijzinnige Partij","Forum voor Democratie"]
 
 
 def load_data(parties_and_sentences,getter):

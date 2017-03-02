@@ -2,7 +2,7 @@
 import os
 import pickle
 
-
+import re
 import json
 from keras.preprocessing import sequence
 from keras.utils import np_utils
@@ -35,14 +35,23 @@ def hello_world():
 def predict_party():
     sentence = request.headers.get('predicttext')
     print(request.headers)
-    words = sentence.split()
-    print("The ids:")
+
+    sentence = sentence .replace("\n", " ")
+
+    sentence = re.sub(r'\w*\d\w*', '', sentence ).strip()
+
+    # make lower case
+    sentence = sentence .lower()
+    if (len(sentence ) > 0):
+        words = partyprogram_loader.basic_tokenizer(sentence)
+    else:
+        words = []
+
     ids = []
 
     for word in words:
-        print(id_of_word_getter.get_id_of_word(word))
         ids.append(id_of_word_getter.get_id_of_word(word))
-        print(id_of_word_getter.get_word_of_id(id_of_word_getter.get_id_of_word(word)))
+        print(id_of_word_getter.get_word_of_id(id_of_word_getter.get_id_of_word(word)), end=' ')
     ids = [ids]
     something = sequence.pad_sequences(ids, maxlen=MAX_REVIEW_LENGTH)
     print(something)
