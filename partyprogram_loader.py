@@ -2,6 +2,7 @@ import re
 import PyPDF2
 import os
 import random
+import textract
 _WORD_SPLIT = re.compile("([.,!?\"':;)(])")
 _PAD = "_PAD"
 _GO = "_GO"
@@ -79,24 +80,23 @@ def get_parties_and_sentences(partypath):
 
     for partijprogramma_name in partijprogrammas:
         print(partijprogramma_name)
-        pdf_obj = open(os.path.join(partypath, partijprogramma_name), 'rb')
-        pdfreader = PyPDF2.PdfFileReader(pdf_obj)
+        path = os.path.join(partypath,partijprogramma_name)
+        text = textract.process(path)
+
 
         sentences = []
 
-        for page in pdfreader.pages:
-            text = page.extractText()
-            # remove all words with a number
-            text = text.replace("\n", " ")
+        # remove all words with a number
+        text = text.replace("\n", " ")
 
-            text = re.sub(r'\w*\d\w*', '', text).strip()
+        text = re.sub(r'\w*\d\w*', '', text).strip()
 
-            # make lower case
-            text = text.lower()
-            if (len(text) > 0):
-                tokens = basic_tokenizer(text)
-                sentences_this_page = get_sentences_from_tokens(tokens)
-                sentences.extend(sentences_this_page)
+        # make lower case
+        text = text.lower()
+        if (len(text) > 0):
+            tokens = basic_tokenizer(text)
+            sentences_this_page = get_sentences_from_tokens(tokens)
+            sentences.extend(sentences_this_page)
         part_sentences[partijprogramma_name] = sentences
     return part_sentences
 

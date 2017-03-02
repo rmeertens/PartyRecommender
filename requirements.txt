@@ -4,3 +4,4 @@ keras
 requests
 h5py
 numpy
+textract
