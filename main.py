@@ -55,7 +55,7 @@ def predict_party():
 
 
 
-    firebasepostresult = firebase.post('/sentences', sentence, {'print': 'pretty'}, {'X_FANCY_HEADER': 'VERY FANCY'})
+    firebasepostresult = myfirebase.post('/sentences', sentence)
 
     ids = []
     sentence_understood = ""
