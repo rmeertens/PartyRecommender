@@ -9,7 +9,7 @@ from keras.utils import np_utils
 from flask import Flask
 from flask import request
 import numpy as np
-
+from firebase import firebase
 app = Flask(__name__)
 
 import model
@@ -20,12 +20,17 @@ FILENAME_SAVED_MODEL = 'party_model.h5'
 FILENAME_SAVED_DATA = 'data.p'
 SAVED_TRAINDATA_DIR = 'traindata'
 PARTIJPATH = 'partijprogrammas'
+FIREBASE_URL = "https://scenic-reason-844.firebaseio.com"
+
 EMBEDDING_VECTOR_LENGTH = 32
 MAX_REVIEW_LENGTH = 20
 
 kerasmodel = None
 id_of_word_getter = None
 party_names = None
+
+myfirebase = firebase.FirebaseApplication(FIREBASE_URL, None)
+
 
 @app.route('/')
 def hello_world():
@@ -40,12 +45,17 @@ def predict_party():
 
     sentence = re.sub(r'\w*\d\w*', '', sentence ).strip()
 
+
     # make lower case
     sentence = sentence .lower()
     if (len(sentence ) > 0):
         words = partyprogram_loader.basic_tokenizer(sentence)
     else:
         words = []
+
+
+
+    firebasepostresult = firebase.post('/sentences', sentence, {'print': 'pretty'}, {'X_FANCY_HEADER': 'VERY FANCY'})
 
     ids = []
     sentence_understood = ""
