@@ -25,7 +25,7 @@ def load_data(parties_and_sentences,getter):
             train_y.append(party_index)
     train_set = list(zip(train_x,train_y))
     random.shuffle(train_set)
-    percentage_split = 0.8
+    percentage_split = 0.95
     train = train_set[:int(percentage_split*len(train_set))]
     test = train_set[int(percentage_split*len(train_set)):]
     return zip(*train),zip(*test)

@@ -17,7 +17,7 @@ def get_model(words_top_count,embedding_vector_length,max_review_length,party_co
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['categorical_accuracy'])
     return model
 
-def train_model(model,X_train,y_train,epochs=3,batch_size=64):
+def train_model(model,X_train,y_train,epochs=5,batch_size=64):
     model.fit(X_train, y_train, nb_epoch=epochs, batch_size=batch_size, verbose=1)
 
 def load_model(filename):
