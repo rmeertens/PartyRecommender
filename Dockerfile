@@ -4,7 +4,7 @@ RUN apt-get -y install libhdf5-dev
 RUN apt-get -y install python3-setuptools
 RUN easy_install3 pip
 RUN apt-get -y install zlib1g-dev
-COPY PartyRecommender /usr/local
+COPY . /usr/local
 WORKDIR /usr/local
 RUN pip3 install textract --no-dependencies
 RUN pip3 install -r requirements.txt
