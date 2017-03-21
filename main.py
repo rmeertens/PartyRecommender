@@ -9,8 +9,9 @@ from keras.utils import np_utils
 from flask import Flask
 from flask import request
 import numpy as np
+import ssl
 from firebase import firebase
-app = Flask(__name__)
+
 
 import model
 import partyprogram_loader
@@ -28,6 +29,11 @@ MAX_REVIEW_LENGTH = 20
 kerasmodel = None
 id_of_word_getter = None
 party_names = None
+
+app = Flask(__name__)
+context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+context.load_cert_chain('/etc/mysecrets/cert.pem', keyfile='/etc/mysecrets/privkey.pem')
+
 
 myfirebase = firebase.FirebaseApplication(FIREBASE_URL, None)
 
@@ -133,4 +139,4 @@ if __name__ == "__main__":
     print("Accuracy: %.2f%%" % (scores[1] * 100))
     print("commit test")
 
-    app.run(host="0.0.0.0",port=5009)
+    app.run(host="0.0.0.0",port=5009, ssl_context=context)
